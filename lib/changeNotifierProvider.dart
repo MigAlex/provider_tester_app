@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-//https://medium.com/flutter-community/making-sense-all-of-those-flutter-providers-e842e18f45dd
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
+class VersionOfChangeNotifierProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
-    return FutureProvider<MyModel>(
-      initialData: MyModel(someValue: 'default value'),
-      create: (context) => someAsyncFunctionToGetMyModel(),
+    return ChangeNotifierProvider<MyModel>(
+      create: (context) => MyModel(),
       child: MaterialApp(
         home: Scaffold(
           appBar: AppBar(title: Text('My App')),
@@ -47,17 +42,12 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-Future<MyModel> someAsyncFunctionToGetMyModel() async { //  <--- async function
-  await Future.delayed(Duration(seconds: 3));
-  return MyModel(someValue: 'new data');
-}
 
-class MyModel{
-  MyModel({this.someValue});
+class MyModel with ChangeNotifier{
   String someValue = 'Hello';
-  Future<void> doSomething() async{
-    await Future.delayed(Duration(seconds: 2));
+  void doSomething() {
     someValue = 'Goodbye';
     print(someValue);
+    notifyListeners();
   }
 }
